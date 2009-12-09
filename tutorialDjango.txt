@@ -1,0 +1,135 @@
+cd ~/workspace
+screen -S django
+
+la documentation sera réalisée dans le screen 0
+vi tutorialDjango.txt
+
+screen 1 : shell + svn / git
+screen 2 : manage.py
+screen 3 : urls.py
+screen 4 : <apps>/models.py
+screen 5 : <apps>/views.py
+screen 6 : <apps>/forms.py
+screen 7 : <apps>/templates/*.html
+screen 8 : <apps>/templatetags/*.py
+screen 9 : wget
+
+création du screen 1
+ctrl A + C
+
+installation de django
+sudo aptitude install python-django
+
+création d'un projet django et envoi sur le depot git
+django-admin startproject myDjangoProject01
+ls -al
+cd myDjangoProject01
+ls -al
+
+installation de postgresql et creation d'un utilisateur fred ayant 
+- le droit superuser (-s) (alter user fred with superuser;)
+- le droit de creer des bases (-d)
+- pas le droit de creer des roles (-R)
+- avec demande de mot de passe (-P)
+sudo aptitude install postgresql-8.3-postgis
+su
+su postgres
+createuser -s -d -R -P fred
+exit
+exit
+
+
+creation d'une base postgis pour accueillir les données de ce projet
+createdb myDjangoProject01
+createlang plpgsql myDjangoProject01
+psql -d myDjangoProject01 -f /usr/share/postgresql-8.3-postgis/lwpostgis.sql
+psql -d myDjangoProject01 -f /usr/share/postgresql-8.3-postgis/spatial_ref_sys.sql
+
+gestion avec git
+installation et configuration de git
+sudo aptitude install git-core
+git config --global user.name "frederic garel"
+git config --global user.email "fgarel@free.fr"
+ssh-keygen .... (xclip et cie...)(cf doc github)
+
+on met de coté les fichiers créés par django-admin
+cd ~/workspace/
+mv myDjangoProject01 myDjangoProject01_pregit
+
+puis on initialise un projet sur github
+on configure et on depose une version initiale du projet contenant un seul fichier README
+cd ~/workspace/
+mkdir myDjangoProject01
+touch README
+git add README
+git commit -m 'first commit'
+git remote add origin git@github.com:fgarel/myDjangoProject01.git
+git push origin master
+
+
+on y reverse le contenu du repertoire de sauvegarde pregit dans le bon nom de depot
+mv myDjangoProject01_pregit/* myDjangoProject01
+
+on met de cote settings.py
+mv settings.py settings.py.templ 
+
+on demande à git de prendre en compte les nouveaux fichiers
+cd myDjangoProject01
+git add *
+git commit -m 'ajout des fichiers créés par django-admin'
+git push origin master
+
+
+
+creation du screen 2
+CTRL A + C
+cd ~/workspace/myDjangoProject01
+NB dans le screen 1, on reviendra faire l'install de python-psycopg2
+sudo aptitude install python-psycopg2
+retour dans le screen 2
+vi settings.py
+DATABASE_ENGINE = 'postgresql_psycopg2'
+DATABASE_NAME = 'myDjangoProject01'
+DATABASE_USER = 'fred'
+DATABASE_PASSWORD = 'fred'
+DATABASE_HOST = 'localhost'
+DATABASE_PORT = '5432'
+
+TIME_ZONE = 'Europe/Paris'
+LANGUAGE_CODE = 'fr-FR'
+
+on enregistre le fichier puis on revient sur le screen 1 (ECHAP :w CTRL A SHIFT 1)
+screen 1
+on lance le serveur 
+python manage.py runserver
+
+(on peut visualiser la page sur http://localhost:8000/
+
+on arrete le serveur, puis on cree maintenant une application
+(avant, on n'avait creer qu'un projet ...)
+(http://www.siteduzero.com/tutoriel-3-14354-installer-django-et-mettre-en-place-un-projet.html)
+python manage.py startapp doodle
+ls doodle/
+
+screen 4 : doodle/models.py
+vi doodle/models.py
+
+
+retour sur le screen 2 pour modifier le settings.py
+INSTALLED_APPS = (
+   ...
+   ...
+   # register our simple app..
+   'doodle'
+   )
+
+retour sur le screen 1 pour effectuer un syncdb
+python manage.py syncdb
+
+retour sur le screen 1 pour effectuer une sauvegarde
+git add *
+git commit -m 'ajout de l'appli doodle (uniqument models.py)
+git push origin master
+
+pour recuperer le projet
+git clone git://github.com/fgarel/myDjangoProject01.git
