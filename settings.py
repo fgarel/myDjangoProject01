@@ -76,6 +76,10 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
-    # register our simple app...
+    # Add dht next line for admin
+    'django.contrib.admin',
+    # Add the next lline for django gis components
+    'django.contrib.gis',
+    # Register our simple app...
     'doodle',
 )

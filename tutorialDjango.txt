@@ -144,3 +144,16 @@ git push origin master
 
 pour recuperer le projet
 git clone git://github.com/fgarel/myDjangoProject01.git
+
+TIPS : pour l'installatin du module admin, le souci est de faire marcher
+la commande dans l'IDLE
+from django.contrib.gis import admin
+si nous avons une erreur comme quoi la variable DJANGO_SETTINGS_MODULE n'esta pas initialisé,
+alors, pour le faire:
+dans le screen 1
+cd ~/workspace/myDjangoProject01/
+export DJANGO_SETTINGS_MODULE=`pwd`
+python manage.py runserver
+TIPS2 : pour supprimer une table apres modification dans models.py
+psql -d myDjangoProject01 -c "drop table doodle;"
+
