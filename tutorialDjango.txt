@@ -1,3 +1,13 @@
+# ce document a pour but de montrer pas à pas le commencement d'un projet django
+# developpé sur une machine debian, en ligne de commande (vi et screen) et
+# sauvgardé dans un depot github
+
+# la première partie de ce document explique l'environnement de travail et le projet
+
+# la seconde parti e peut etre le poit d'entrée directe pour un utilisateur déja aguerri
+
+# 1ere partie : environnement et installation des outils
+# le tutorial suivi est "django training notes (c) 2009 linfiniti Consulting cc."
 cd ~/workspace
 screen -S django
 
@@ -130,6 +140,7 @@ retour sur le screen 1 pour effectuer une sauvegarde
 git add *
 git commit -m 'ajout de l'appli doodle (uniqument models.py)
 git push origin master
+
 
 pour recuperer le projet
 git clone git://github.com/fgarel/myDjangoProject01.git
